@@ -10,5 +10,9 @@ python3 covid_graph.py
 
 # or if you want log scaled graphs
 
-python3 covid_graph.py --log
+python3 covid_graph.py --log # -l works too
+
+# you can make all of the graphs use the same scale with
+
+python3 covid_graph.py --normalize # -n
 ```

@@ -18,6 +18,8 @@ csv_data = pandas.DataFrame(pandas.read_csv(filename))
 
 state_data = {}
 
+highest_number = 0
+
 for _, row in csv_data.iterrows():
     date_raw = row["date"]
     date = dateparser.parse(date_raw)
@@ -26,8 +28,15 @@ for _, row in csv_data.iterrows():
     cases = row["cases"]
     deaths = row["deaths"]
 
+    if cases > highest_number:
+        highest_number = cases
+
+    if deaths > highest_number:
+        highest_number = deaths
+
     if state not in state_data:
         state_data[state] = []
+
 
     state_data[state].append({"date": date, "date_raw": date_raw, "state": state, "fips": fips, "cases": cases, "deaths": deaths})
 
@@ -70,8 +79,11 @@ for state in sorted(state_data):
     axs[y][x].set_title(state)
     axs[y][x].set_xticklabels(dates, rotation=90)
 
-    if "--log" in args:
+    if "--log" in args or "-l" in args:
         axs[y][x].set_yscale("log")
+
+    if "--normalize" in args or "-n" in args:
+        axs[y][x].set_ylim(bottom=0, top=highest_number)
 
     axs[y][x].legend()
 
